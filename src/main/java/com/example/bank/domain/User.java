@@ -2,19 +2,47 @@ package com.example.bank.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "userId", nullable = false, updatable = false)
 	private Long userId;
 	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
+	
+	@Column(name = "email", nullable = false, updatable = false)
 	private String email;
 	private String phone;
+	
 	private boolean enabled = true;
+	
+	@OneToOne
 	private PrimaryAccount primaryAccount;
+	
+	@OneToOne
 	private SavingsAccount savingAccount;
+	
+	@OneToMany(mappedBy  = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Appointment> appointments;
+	
+	@OneToMany(mappedBy  = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Recepient> recepients;
 
 	public Long getUserId() {
