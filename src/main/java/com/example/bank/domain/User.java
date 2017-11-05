@@ -1,7 +1,9 @@
 package com.example.bank.domain;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,10 +18,12 @@ import javax.persistence.OneToOne;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.bank.domain.security.Authority;
+import com.example.bank.domain.security.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +52,10 @@ public class User {
 	
 	@OneToMany(mappedBy  = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Recepient> recepients;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonIgnore
+	private Set<UserRole> userRoles = new HashSet<>();
 
 	public Long getUserId() {
 		return userId;
@@ -154,8 +162,9 @@ public class User {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+		return authorities;
 	}
 
 	@Override
@@ -175,5 +184,5 @@ public class User {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 }
