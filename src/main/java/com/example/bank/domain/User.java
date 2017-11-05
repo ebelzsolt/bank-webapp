@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class User implements UserDetails {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "userId", nullable = false, updatable = false)
@@ -56,6 +58,14 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
+
+	public Set<UserRole> getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(Set<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
 
 	public Long getUserId() {
 		return userId;
@@ -133,7 +143,7 @@ public class User implements UserDetails {
 		return savingAccount;
 	}
 
-	public void setSavingAccount(SavingsAccount savingAccount) {
+	public void setSavingsAccount(SavingsAccount savingAccount) {
 		this.savingAccount = savingAccount;
 	}
 

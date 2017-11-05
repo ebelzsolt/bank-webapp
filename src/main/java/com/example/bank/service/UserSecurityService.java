@@ -19,6 +19,9 @@ public class UserSecurityService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		System.out.println("loadUserByUsername param: " + username);
+		System.out.println("loadUserByUsername dao result: ");
+		System.out.println(userDao.findByUsername(username));
 		User user = userDao.findByUsername(username);
 		
 		if(user == null) {
